@@ -8,6 +8,7 @@ import styles from './order-info.module.css';
 
 import { OrderInfoUIProps } from './type';
 import { OrderStatus } from '@components';
+import { CustomScrollbar } from '../custom-scrollbar';
 
 export const OrderInfoUI: FC<OrderInfoUIProps> = memo(({ orderInfo }) => (
   <div className={styles.wrap}>
@@ -16,7 +17,7 @@ export const OrderInfoUI: FC<OrderInfoUIProps> = memo(({ orderInfo }) => (
     </h3>
     <OrderStatus status={orderInfo.status} />
     <p className={`text text_type_main-medium pt-15 pb=6`}>Состав:</p>
-    <ul className={`${styles.list} mb-8`}>
+    <CustomScrollbar as='ul' className={`${styles.list} mb-8`}>
       {Object.values(orderInfo.ingredientsInfo).map((item, index) => (
         <li className={`pb-4 pr-6 ${styles.item}`} key={index}>
           <div className={styles.img_wrap}>
@@ -37,7 +38,7 @@ export const OrderInfoUI: FC<OrderInfoUIProps> = memo(({ orderInfo }) => (
           <CurrencyIcon type={'primary'} />
         </li>
       ))}
-    </ul>
+    </CustomScrollbar>
     <div className={styles.bottom}>
       <p className='text text_type_main-default text_color_inactive'>
         <FormattedDate date={orderInfo.date} />

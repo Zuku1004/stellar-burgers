@@ -4,6 +4,7 @@ import { Tab } from '@zlden/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import { BurgerIngredientsUIProps } from './type';
 import { IngredientsCategory } from '@components';
+import { CustomScrollbar } from '../custom-scrollbar';
 
 export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
   ({
@@ -42,7 +43,7 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
             </Tab>
           </ul>
         </nav>
-        <div className={styles.content}>
+        <CustomScrollbar className={styles.content}>
           <IngredientsCategory
             title='Булки'
             titleRef={titleBunRef}
@@ -61,7 +62,7 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
             ingredients={sauces}
             ref={saucesRef}
           />
-        </div>
+        </CustomScrollbar>
       </section>
     </>
   )
