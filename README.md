@@ -65,6 +65,20 @@ npx webpack --mode=production
 
 Production-сборка создаётся в папке  `dist`.
 
+## Тесты
+
+Запуск Jest-тестов:
+
+```bash
+npm run test:jest
+```
+
+Запуск Playwright-тестов:
+
+```bash
+npm run test:playwright
+```
+
 ## Основные  маршруты
 
 - `/` — конструктор бургеров;
