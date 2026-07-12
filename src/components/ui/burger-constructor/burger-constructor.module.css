@@ -8,11 +8,14 @@
 
 .elements {
   min-height: 100px;
-
-  overflow-y: scroll;
+  max-height: calc(100vh - 536px);
+  overflow-y: auto;
+  padding-right: 12px;
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .total {
