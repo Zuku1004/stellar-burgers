@@ -1,4 +1,7 @@
-import ingredientsReducer, { fetchIngredients } from '../ingredientsSlice';
+import ingredientsReducer, {
+  fetchIngredients,
+  initialState
+} from '../ingredientsSlice';
 import { TIngredient } from '@utils-types';
 
 const mockIngredients: TIngredient[] = [
@@ -32,11 +35,9 @@ const mockIngredients: TIngredient[] = [
 
 describe('ingredients reducer', () => {
   it('returns the initial state for an unknown action', () => {
-    expect(ingredientsReducer(undefined, { type: 'UNKNOWN' })).toEqual({
-      ingredients: [],
-      isLoading: false,
-      error: null
-    });
+    expect(ingredientsReducer(undefined, { type: 'UNKNOWN' })).toEqual(
+      initialState
+    );
   });
 
   it('sets loading state while ingredients are being requested', () => {

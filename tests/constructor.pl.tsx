@@ -4,6 +4,9 @@ import path from 'path';
 const BUN_NAME = 'Краторная булка N-200i';
 const MAIN_NAME = 'Биокотлета из марсианской Магнолии';
 const SAUCE_NAME = 'Соус Spicy-X';
+const BUN_ID = '643d69a5c3f7b9001cfa093c';
+const MAIN_ID = '643d69a5c3f7b9001cfa0941';
+const SAUCE_ID = '643d69a5c3f7b9001cfa0942';
 const ORDER_NUMBER = '12345';
 
 const harPath = path.join(__dirname, 'hars', 'constructor.har');
@@ -20,14 +23,11 @@ const openConstructorPage = async (page: Page) => {
   await expect(page.getByText(BUN_NAME, { exact: true })).toBeVisible();
 };
 
-const addIngredient = async (
-  page: Page,
-  ingredientName: string
-) => {
-  const ingredientCard = page.locator('li').filter({ hasText: ingredientName });
+const addIngredient = async (page: Page, ingredientId: string) => {
+  const ingredientCard = page.getByTestId(`ingredient-${ingredientId}`);
 
   await expect(ingredientCard).toBeVisible();
-  await ingredientCard.getByRole('button').click();
+  await ingredientCard.getByRole('button', { name: 'Добавить' }).click();
 };
 
 test.describe('burger constructor page', () => {
@@ -36,15 +36,21 @@ test.describe('burger constructor page', () => {
   }) => {
     await openConstructorPage(page);
 
-    await addIngredient(page, BUN_NAME);
-    await addIngredient(page, MAIN_NAME);
-    await addIngredient(page, SAUCE_NAME);
+    const constructor = page.getByTestId('burger-constructor');
+
+    await addIngredient(page, BUN_ID);
+    await addIngredient(page, MAIN_ID);
+    await addIngredient(page, SAUCE_ID);
 
     await expect(
-      page.getByText(new RegExp(`${escapeRegExp(BUN_NAME)} \\(`))
+      constructor.getByText(new RegExp(`${escapeRegExp(BUN_NAME)} \\(`))
     ).toHaveCount(2);
-    await expect(page.getByText(MAIN_NAME, { exact: true })).toHaveCount(2);
-    await expect(page.getByText(SAUCE_NAME, { exact: true })).toHaveCount(2);
+    await expect(constructor.getByText(MAIN_NAME, { exact: true })).toHaveCount(
+      1
+    );
+    await expect(
+      constructor.getByText(SAUCE_NAME, { exact: true })
+    ).toHaveCount(1);
   });
 
   test('opens ingredient details modal and closes it with close button', async ({
@@ -52,7 +58,7 @@ test.describe('burger constructor page', () => {
   }) => {
     await openConstructorPage(page);
 
-    const ingredientCard = page.locator('li').filter({ hasText: MAIN_NAME });
+    const ingredientCard = page.getByTestId(`ingredient-${MAIN_ID}`);
     await ingredientCard.getByRole('link').click();
 
     const modal = page.locator('#modals > div').first();
@@ -67,16 +73,19 @@ test.describe('burger constructor page', () => {
   test('closes ingredient details modal by overlay click', async ({ page }) => {
     await openConstructorPage(page);
 
-    const ingredientCard = page.locator('li').filter({ hasText: SAUCE_NAME });
+    const ingredientCard = page.getByTestId(`ingredient-${SAUCE_ID}`);
     await ingredientCard.getByRole('link').click();
 
     await expect(page.locator('#modals')).toContainText(SAUCE_NAME);
-    await page.locator('#modals > div').last().click({
-      position: {
-        x: 10,
-        y: 10
-      }
-    });
+    await page
+      .locator('#modals > div')
+      .last()
+      .click({
+        position: {
+          x: 10,
+          y: 10
+        }
+      });
     await expect(page.locator('#modals > div')).toHaveCount(0);
   });
 
@@ -97,16 +106,20 @@ test.describe('burger constructor page', () => {
     });
     await openConstructorPage(page);
 
-    await addIngredient(page, BUN_NAME);
-    await addIngredient(page, MAIN_NAME);
+    const constructor = page.getByTestId('burger-constructor');
 
-    await page.locator('button').last().click();
+    await addIngredient(page, BUN_ID);
+    await addIngredient(page, MAIN_ID);
+
+    await page.getByRole('button', { name: 'Оформить заказ' }).click();
 
     await expect(page.locator('#modals')).toContainText(ORDER_NUMBER);
     await expect(
-      page.getByText(new RegExp(`${escapeRegExp(BUN_NAME)} \\(`))
+      constructor.getByText(new RegExp(`${escapeRegExp(BUN_NAME)} \\(`))
     ).toHaveCount(0);
-    await expect(page.getByText(MAIN_NAME, { exact: true })).toHaveCount(1);
+    await expect(constructor.getByText(MAIN_NAME, { exact: true })).toHaveCount(
+      0
+    );
 
     await page.locator('#modals button').click();
     await expect(page.locator('#modals > div')).toHaveCount(0);

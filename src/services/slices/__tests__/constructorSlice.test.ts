@@ -5,6 +5,7 @@ jest.mock('uuid', () => ({
 import constructorReducer, {
   addIngredient,
   clearConstructor,
+  initialState,
   moveIngredient,
   removeIngredient
 } from '../constructorSlice';
@@ -54,10 +55,9 @@ const mockSauce: TIngredient = {
 
 describe('burgerConstructor reducer', () => {
   it('returns the initial state for an unknown action', () => {
-    expect(constructorReducer(undefined, { type: 'UNKNOWN' })).toEqual({
-      bun: null,
-      ingredients: []
-    });
+    expect(constructorReducer(undefined, { type: 'UNKNOWN' })).toEqual(
+      initialState
+    );
   });
 
   it('adds a bun to the constructor', () => {
